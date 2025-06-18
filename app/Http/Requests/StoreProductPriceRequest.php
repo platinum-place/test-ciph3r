@@ -4,7 +4,7 @@ namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
 
-class StoreProductRequest extends FormRequest
+class StoreProductPriceRequest extends FormRequest
 {
     /**
      * Determine if the user is authorized to make this request.
@@ -22,12 +22,16 @@ class StoreProductRequest extends FormRequest
     public function rules(): array
     {
         return [
-            'name' => ['required', 'string', 'max:255'],
-            'description' => ['required', 'string'],
             'price' => ['required', 'numeric', 'min:0'],
+            'product_id' => ['required', 'exists:products,id'],
             'currency_id' => ['required', 'exists:currencies,id'],
-            'tax_cost' => ['required', 'numeric', 'min:0'],
-            'manufacturing_cost' => ['required', 'numeric', 'min:0'],
         ];
+    }
+
+    protected function prepareForValidation(): void
+    {
+        $this->merge([
+            'product_id' => $this->route('id')
+        ]);
     }
 }

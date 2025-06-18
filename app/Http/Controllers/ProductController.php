@@ -2,15 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Http\Requests\StoreProductPriceRequest;
 use App\Http\Requests\StoreProductRequest;
 use App\Http\Requests\UpdateProductRequest;
 use App\Http\Resources\ProductResource;
+use App\Repositories\ProductPriceRepository;
 use App\Repositories\ProductRepository;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    public function __construct(protected ProductRepository $repository) {}
+    public function __construct(protected ProductRepository $repository, protected ProductPriceRepository $priceRepository)
+    {
+    }
 
     /**
      * Display a listing of the resource.
@@ -60,5 +64,19 @@ class ProductController extends Controller
         $this->repository->destroy($id);
 
         return response()->noContent();
+    }
+
+    public function pricesList(string $id)
+    {
+        $list = $this->priceRepository->search(['product_id' => $id]);
+
+        return ProductResource::collection($list);
+    }
+
+    public function storePrice(StoreProductPriceRequest $request,string $id)
+    {
+        $price = $this->priceRepository->store($request->validated());
+
+        return new ProductResource($price);
     }
 }
