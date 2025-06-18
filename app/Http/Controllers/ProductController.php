@@ -73,9 +73,11 @@ class ProductController extends Controller
         return ProductResource::collection($list);
     }
 
-    public function storePrice(StoreProductPriceRequest $request,string $id)
+    public function storePrice(StoreProductPriceRequest $request, string $id)
     {
-        $price = $this->priceRepository->store($request->validated());
+        $model = $this->repository->getById($id);
+
+        $price = $model->prices()->create($request->validated());
 
         return new ProductResource($price);
     }

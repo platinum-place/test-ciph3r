@@ -23,15 +23,7 @@ class StoreProductPriceRequest extends FormRequest
     {
         return [
             'price' => ['required', 'numeric', 'min:0'],
-            'product_id' => ['required', 'exists:products,id'],
             'currency_id' => ['required', 'exists:currencies,id'],
         ];
-    }
-
-    protected function prepareForValidation(): void
-    {
-        $this->merge([
-            'product_id' => $this->route('id')
-        ]);
     }
 }

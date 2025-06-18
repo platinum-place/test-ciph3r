@@ -28,9 +28,4 @@ class Product extends Model
     {
         return $this->hasMany(ProductPrice::class);
     }
-
-//    public function priceInCurrency($currencyId)
-//    {
-//        return $this->prices()->where('currency_id', $currencyId)->first();
-//    }
 }
